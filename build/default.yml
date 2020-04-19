@@ -79,7 +79,7 @@ jobs:
         inputs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
-          key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)"
+          key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | ${{ parameters.rust }}
           path: '$HOME/.cargo'
       - task: Bash@3
         displayName: "Set Up Build Variables"
