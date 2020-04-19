@@ -74,6 +74,13 @@ jobs:
       ${{ insert }}: ${{ parameters.services }}
     continueOnError: $[eq(variables.rust, 'nightly')]
     steps:
+      - task: Cache@2
+        displayName: Cache cargo registry
+        inputs:
+          # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
+          # double quotes.
+          key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)"
+          path: '$HOME/.cargo'
       - task: Bash@3
         displayName: "Set Up Build Variables"
         env:
@@ -122,6 +129,7 @@ jobs:
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo doc
       - task: CopyFiles@2
+        condition: $[eq(variables.rust, 'stable')]
         displayName: "Copy frozen executables to staging"
         inputs:
           sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
@@ -131,12 +139,14 @@ jobs:
           targetFolder: '$(Build.ArtifactStagingDirectory)'
           flattenFolders: true
       - task: ArchiveFiles@2
+        condition: $[eq(variables.rust, 'stable')]
         inputs:
           rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
           includeRootFolder: false
           archiveType: 'zip'
       - task: PublishPipelineArtifact@0
+        condition: $[eq(variables.rust, 'stable')]
         displayName: "Publish frozen executables to artifacts"
         inputs:
           targetPath: '$(Build.ArtifactStagingDirectory)'
