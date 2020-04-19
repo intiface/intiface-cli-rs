@@ -98,7 +98,7 @@ jobs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
           key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
-          path: $(CARGO_PATH)
+          path: $(CARGOPATH)
       - task: Bash@3
         displayName: "Set Up Build Variables"
         env:
@@ -133,19 +133,19 @@ jobs:
         condition: ${{ parameters.check_all_features }}
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo check --all-features
-      - script: cargo test --all-features
-        workingDirectory: ${{ parameters.dir }}
-        displayName: cargo test
-        env:
-          ${{ insert }}: ${{ parameters.env }}
+      # - script: cargo test --all-features
+      #   workingDirectory: ${{ parameters.dir }}
+      #   displayName: cargo test
+      #   env:
+      #     ${{ insert }}: ${{ parameters.env }}
       # - script: cargo build --release
       #   workingDirectory: ${{ parameters.dir }}
       #   displayName: cargo build --release
       #   env:
       #     ${{ insert }}: ${{ parameters.env }}        
-      - script: cargo doc --no-deps
-        workingDirectory: ${{ parameters.dir }}
-        displayName: cargo doc
+      # - script: cargo doc --no-deps
+      #   workingDirectory: ${{ parameters.dir }}
+      #   displayName: cargo doc
       # - task: CopyFiles@2
       #   condition: eq(variables.rust, 'stable')
       #   displayName: "Copy frozen executables to staging"
