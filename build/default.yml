@@ -129,7 +129,7 @@ jobs:
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo doc
       - task: CopyFiles@2
-        condition: $[eq(variables.rust, 'stable')]
+        condition: eq(variables.rust, 'stable')
         displayName: "Copy frozen executables to staging"
         inputs:
           sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
@@ -139,14 +139,14 @@ jobs:
           targetFolder: '$(Build.ArtifactStagingDirectory)'
           flattenFolders: true
       - task: ArchiveFiles@2
-        condition: $[eq(variables.rust, 'stable')]
+        condition: eq(variables.rust, 'stable')
         inputs:
           rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
           includeRootFolder: false
           archiveType: 'zip'
       - task: PublishPipelineArtifact@0
-        condition: $[eq(variables.rust, 'stable')]
+        condition: eq(variables.rust, 'stable')
         displayName: "Publish frozen executables to artifacts"
         inputs:
           targetPath: '$(Build.ArtifactStagingDirectory)'
