@@ -9,21 +9,6 @@ parameters:
   check_no_features: true
 
 jobs:
-  - task: Bash@3
-    displayName: "Set Up Build Variables"
-    inputs:
-      targetType: inline
-      script: |
-        gitCurrentTag=$(git tag --points-at HEAD --sort -version:refname | head -1)
-        gitShortHash=$(git describe --long --always --dirty)
-        gitVersion=`if [[ -z $gitCurrentTag ]]; then echo $gitShortHash; else echo $gitCurrentTag; fi;`
-        echo "##vso[task.setvariable variable=gitCurrentTag]$gitCurrentTag"
-        echo "##vso[task.setvariable variable=gitVersion]$gitVersion"
-        echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-${{ parameters.platform }}-$gitVersion"
-        echo "Git Current Tag: $gitCurrentTag"
-        echo "Git Short Hash: $gitShortHash"
-        echo "Git Version for Build: $gitVersion"
-        echo "CLI Name: intiface-cli-node-${{ parameters.platform }}-$gitVersion"
   - job: style
     displayName: Style linting
     strategy:
@@ -89,6 +74,21 @@ jobs:
       ${{ insert }}: ${{ parameters.services }}
     continueOnError: $[eq(variables.rust, 'nightly')]
     steps:
+      - task: Bash@3
+        displayName: "Set Up Build Variables"
+        inputs:
+          targetType: inline
+          script: |
+            gitCurrentTag=$(git tag --points-at HEAD --sort -version:refname | head -1)
+            gitShortHash=$(git describe --long --always --dirty)
+            gitVersion=`if [[ -z $gitCurrentTag ]]; then echo $gitShortHash; else echo $gitCurrentTag; fi;`
+            echo "##vso[task.setvariable variable=gitCurrentTag]$gitCurrentTag"
+            echo "##vso[task.setvariable variable=gitVersion]$gitVersion"
+            echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-${{ parameters.platform }}-$gitVersion"
+            echo "Git Current Tag: $gitCurrentTag"
+            echo "Git Short Hash: $gitShortHash"
+            echo "Git Version for Build: $gitVersion"
+            echo "CLI Name: intiface-cli-node-${{ parameters.platform }}-$gitVersion"
       - template: install-rust.yml@templates
         parameters:
           rust: $(rust)
