@@ -41,21 +41,21 @@ jobs:
     ${{ if eq('true', parameters.cross) }}:
       strategy:
         matrix:
-          "Linux (nightly)":
-            vmImage: ubuntu-18.04
-            rust: nightly
-          "Linux (beta)":
-            vmImage: ubuntu-18.04
-            rust: beta
+          # "Linux (nightly)":
+          #   vmImage: ubuntu-18.04
+          #   rust: nightly
+          # "Linux (beta)":
+          #   vmImage: ubuntu-18.04
+          #   rust: beta
           Linux:
             vmImage: ubuntu-18.04
             rust: stable
-          MacOS:
-            vmImage: macOS-10.15
-            rust: stable
-          Windows:
-            vmImage: windows-2019
-            rust: stable
+          # MacOS:
+          #   vmImage: macOS-10.15
+          #   rust: stable
+          # Windows:
+          #   vmImage: windows-2019
+          #   rust: stable
     ${{ if ne('true', parameters.cross) }}:
       strategy:
         matrix:
@@ -138,37 +138,37 @@ jobs:
         displayName: cargo test
         env:
           ${{ insert }}: ${{ parameters.env }}
-      - script: cargo build --release
-        workingDirectory: ${{ parameters.dir }}
-        displayName: cargo build --release
-        env:
-          ${{ insert }}: ${{ parameters.env }}        
+      # - script: cargo build --release
+      #   workingDirectory: ${{ parameters.dir }}
+      #   displayName: cargo build --release
+      #   env:
+      #     ${{ insert }}: ${{ parameters.env }}        
       - script: cargo doc --no-deps
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo doc
-      - task: CopyFiles@2
-        condition: eq(variables.rust, 'stable')
-        displayName: "Copy frozen executables to staging"
-        inputs:
-          sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
-          contents: |
-            intiface-cli
-            intiface-cli.exe
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
-          flattenFolders: true
-      - task: ArchiveFiles@2
-        condition: eq(variables.rust, 'stable')
-        inputs:
-          rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
-          includeRootFolder: false
-          archiveType: 'zip'
-      - task: PublishPipelineArtifact@0
-        condition: eq(variables.rust, 'stable')
-        displayName: "Publish frozen executables to artifacts"
-        inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)'
-          artifactName: '$(cliBuildName)'        
+      # - task: CopyFiles@2
+      #   condition: eq(variables.rust, 'stable')
+      #   displayName: "Copy frozen executables to staging"
+      #   inputs:
+      #     sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
+      #     contents: |
+      #       intiface-cli
+      #       intiface-cli.exe
+      #     targetFolder: '$(Build.ArtifactStagingDirectory)'
+      #     flattenFolders: true
+      # - task: ArchiveFiles@2
+      #   condition: eq(variables.rust, 'stable')
+      #   inputs:
+      #     rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
+      #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
+      #     includeRootFolder: false
+      #     archiveType: 'zip'
+      # - task: PublishPipelineArtifact@0
+      #   condition: eq(variables.rust, 'stable')
+      #   displayName: "Publish frozen executables to artifacts"
+      #   inputs:
+      #     targetPath: '$(Build.ArtifactStagingDirectory)'
+      #     artifactName: '$(cliBuildName)'        
   - ${{ if ne('false', parameters.minrust) }}:
     - job: msrv
       displayName: "${{ format('Minimum supported Rust version: {0}', parameters.minrust) }}"
