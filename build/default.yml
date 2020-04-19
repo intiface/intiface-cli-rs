@@ -113,6 +113,11 @@ jobs:
         displayName: cargo test
         env:
           ${{ insert }}: ${{ parameters.env }}
+      - script: cargo build --release
+        workingDirectory: ${{ parameters.dir }}
+        displayName: cargo build --release
+        env:
+          ${{ insert }}: ${{ parameters.env }}        
       - script: cargo doc --no-deps
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo doc
