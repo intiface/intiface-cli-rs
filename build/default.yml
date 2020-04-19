@@ -76,6 +76,9 @@ jobs:
     steps:
       - task: Bash@3
         displayName: "Set Up Build Variables"
+        env:
+          AGENTOS: $(Agent.OS)
+          AGENTARCH: $(Agent.OSArchitecture)
         inputs:
           targetType: inline
           script: |
@@ -84,11 +87,11 @@ jobs:
             gitVersion=`if [[ -z $gitCurrentTag ]]; then echo $gitShortHash; else echo $gitCurrentTag; fi;`
             echo "##vso[task.setvariable variable=gitCurrentTag]$gitCurrentTag"
             echo "##vso[task.setvariable variable=gitVersion]$gitVersion"
-            echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-${{ Agent.OS }}_${{ Agent.OSArchitecture }}-$gitVersion"
+            echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-$AGENTOS_$AGENTARCH-$gitVersion"
             echo "Git Current Tag: $gitCurrentTag"
             echo "Git Short Hash: $gitShortHash"
             echo "Git Version for Build: $gitVersion"
-            echo "CLI Name: intiface-cli-node-${{ Agent.OS }}_${{ Agent.OSArchitecture }}-$gitVersion"
+            echo "CLI Name: intiface-cli-node-$AGENTOS_$AGENTARCH-$gitVersion"
       - template: install-rust.yml@templates
         parameters:
           rust: $(rust)
