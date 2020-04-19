@@ -111,6 +111,26 @@ jobs:
       - script: cargo doc --no-deps
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo doc
+      - task: CopyFiles@2
+        displayName: "Copy frozen executables to staging"
+        inputs:
+          sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
+          contents: |
+            intiface-cli
+            intiface-cli.exe
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          flattenFolders: true
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
+          includeRootFolder: false
+          archiveType: 'zip'
+      - task: PublishPipelineArtifact@0
+        displayName: "Publish frozen executables to artifacts"
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifactName: '$(cliBuildName)'        
   - ${{ if ne('false', parameters.minrust) }}:
     - job: msrv
       displayName: "${{ format('Minimum supported Rust version: {0}', parameters.minrust) }}"
@@ -142,24 +162,5 @@ jobs:
         services: ${{ parameters.services }}
         env: ${{ parameters.env }}
         dir: ${{ parameters.dir }}
-  - task: CopyFiles@2
-    displayName: "Copy frozen executables to staging"
-    inputs:
-      sourceFolder: "$(System.DefaultWorkingDirectory)/target/release"
-      contents: |
-        intiface-cli
-        intiface-cli.exe
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-      flattenFolders: true
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
-      archiveFile: '$(Build.ArtifactStagingDirectory)/$(cliBuildName).zip'
-      includeRootFolder: false
-      archiveType: 'zip'
-  - task: PublishPipelineArtifact@0
-    displayName: "Publish frozen executables to artifacts"
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)'
-      artifactName: '$(cliBuildName)'
+
  
