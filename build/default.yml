@@ -79,7 +79,7 @@ jobs:
           rust: $(rust)
       # Necessary for now for the cargo cache:
       # https://github.com/actions/cache/issues/133#issuecomment-599102035
-      - script: sudo chown -R $(whoami):$(id -ng) /usr/share/rust/.cargo/resources
+      - script: sudo chown -R $(whoami):$(id -ng) /usr/share/rust/.cargo/
         displayName: Fix .cargo directory permissions
         condition: eq(variables['Agent.OS'], 'Linux')
       - task: Cache@2
@@ -89,7 +89,7 @@ jobs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
           key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
-          path: /usr/share/rust/.cargo/resources
+          path: /usr/share/rust/.cargo/
       - task: Cache@2
         displayName: Cache cargo registry
         condition: eq(variables['Agent.OS'], 'Darwin')
@@ -97,7 +97,7 @@ jobs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
           key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
-          path: /Users/runner/.cargo/bin
+          path: /Users/runner/.cargo/
       - task: Cache@2
         displayName: Cache cargo registry
         condition: eq(variables['Agent.OS'], 'Windows_NT')
