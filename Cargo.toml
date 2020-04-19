@@ -29,6 +29,10 @@ bytes = "0.5.4"
 [target.'cfg(windows)'.dependencies]
 kernel32-sys = "0.2.1"
 winapi = "0.3.8"
+# This needs to match the version of openssl in rustls, so we can make
+# sure we're compiling the correct thing. Using VSPKGRS_DYNAMIC here
+# would require us to also redistribute the openssl DLL.
+openssl = { version = "0.10.29", features = ["vendored"] }
 
 [build-dependencies]
 prost-build = "0.6.1"
