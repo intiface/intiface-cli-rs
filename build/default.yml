@@ -87,11 +87,11 @@ jobs:
             gitVersion=`if [[ -z $gitCurrentTag ]]; then echo $gitShortHash; else echo $gitCurrentTag; fi;`
             echo "##vso[task.setvariable variable=gitCurrentTag]$gitCurrentTag"
             echo "##vso[task.setvariable variable=gitVersion]$gitVersion"
-            echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-$AGENTOS_$AGENTARCH-$gitVersion"
+            echo "##vso[task.setvariable variable=cliBuildName]intiface-cli-rs-$AGENTOS-$AGENTARCH-$gitVersion"
             echo "Git Current Tag: $gitCurrentTag"
             echo "Git Short Hash: $gitShortHash"
             echo "Git Version for Build: $gitVersion"
-            echo "CLI Name: intiface-cli-node-$AGENTOS_$AGENTARCH-$gitVersion"
+            echo "CLI Name: intiface-cli-rs-$AGENTOS-$AGENTARCH-$gitVersion"
       - template: install-rust.yml@templates
         parameters:
           rust: $(rust)
@@ -101,9 +101,11 @@ jobs:
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo check
       - script: cargo check --no-default-features
+        condition: ${{ parameter.check_no_features }}
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo check --no-default-features
       - script: cargo check --all-features
+        condition: ${{ parameter.check_all_features }}
         workingDirectory: ${{ parameters.dir }}
         displayName: cargo check --all-features
       - script: cargo test --all-features
