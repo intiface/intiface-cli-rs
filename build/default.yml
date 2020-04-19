@@ -88,6 +88,11 @@ jobs:
           RUSTUP_TOOLCHAIN: ${{parameters.rust}}
         displayName: "Set Cargo Path (*nix)"
         condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
+      # Necessary for now for the cargo cache:
+      # https://github.com/actions/cache/issues/133#issuecomment-599102035
+      - script: sudo chown -R $(whoami):$(id -ng) $(CARGOPATH)
+        displayName: Fix .cargo directory permissions
+        condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
       # Windows.
       - script: |
           set CARGOPATH=%USERPROFILE%\.cargo\bin
