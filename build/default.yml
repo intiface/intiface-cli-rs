@@ -76,6 +76,9 @@ jobs:
     variables:
       CARGO_CACHE_FOLDER: $(Agent.HomeDirectory)/.cargo
     steps:
+      - script: echo $PATH
+        workingDirectory: ${{ parameters.dir }}
+        displayName: echo path
       - task: Cache@2
         displayName: Cache cargo registry
         inputs:
