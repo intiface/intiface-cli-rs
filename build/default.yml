@@ -8,9 +8,6 @@ parameters:
   check_all_features: true
   check_no_features: true
 
-variables:
-  CARGO_CACHE_FOLDER: $(Pipeline.Workspace)/.cargo
-
 jobs:
   - job: style
     displayName: Style linting
@@ -76,6 +73,8 @@ jobs:
     services:
       ${{ insert }}: ${{ parameters.services }}
     continueOnError: $[eq(variables.rust, 'nightly')]
+    variables:
+      CARGO_CACHE_FOLDER: $(Pipeline.Workspace)/.cargo
     steps:
       - task: Cache@2
         displayName: Cache cargo registry
