@@ -76,8 +76,12 @@ jobs:
     variables:
       CARGO_CACHE_FOLDER: $(Agent.HomeDirectory)/.cargo
     steps:
+      - template: install-rust.yml@templates
+        parameters:
+          rust: $(rust)
       # Linux and macOS.
       - script: |
+          set CARGOPATH $HOME/.cargo/bin
           echo "##vso[task.setvariable variable=CARGOPATH;]$HOME/.cargo/bin"
           echo $CARGOPATH
         env:
@@ -86,6 +90,7 @@ jobs:
         condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
       # Windows.
       - script: |
+          set CARGOPATH=%USERPROFILE%\.cargo\bin
           echo "##vso[task.setvariable variable=CARGOPATH;]%USERPROFILE%\.cargo\bin"
           echo %CARGOPATH%
         env:
@@ -117,9 +122,6 @@ jobs:
             echo "Git Short Hash: $gitShortHash"
             echo "Git Version for Build: $gitVersion"
             echo "CLI Name: intiface-cli-rs-$AGENTOS-$AGENTARCH-$gitVersion"
-      - template: install-rust.yml@templates
-        parameters:
-          rust: $(rust)
       # Run any user-specific setup steps
       - ${{ parameters.setup }}
       - script: cargo check
