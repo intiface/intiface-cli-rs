@@ -74,7 +74,7 @@ jobs:
       ${{ insert }}: ${{ parameters.services }}
     continueOnError: $[eq(variables.rust, 'nightly')]
     variables:
-      CARGO_CACHE_FOLDER: $(Pipeline.Workspace)/.cargo
+      CARGO_CACHE_FOLDER: $(Agent.HomeDirectory)/.cargo
     steps:
       - task: Cache@2
         displayName: Cache cargo registry
