@@ -8,6 +8,9 @@ parameters:
   check_all_features: true
   check_no_features: true
 
+variables:
+  CARGO_CACHE_FOLDER: $(Pipeline.Workspace)/.cargo
+
 jobs:
   - job: style
     displayName: Style linting
@@ -80,7 +83,7 @@ jobs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
           key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
-          path: '$HOME/.cargo'
+          path: $(CARGO_CACHE_FOLDER)
       - task: Bash@3
         displayName: "Set Up Build Variables"
         env:
