@@ -73,38 +73,34 @@ jobs:
     services:
       ${{ insert }}: ${{ parameters.services }}
     continueOnError: $[eq(variables.rust, 'nightly')]
-    variables:
-      CARGO_CACHE_FOLDER: $(Agent.HomeDirectory)/.cargo
     steps:
       - template: install-rust.yml@templates
         parameters:
           rust: $(rust)
-      # Linux and macOS.
-      - script: |
-          set CARGOPATH ~/.cargo/bin
-          echo ~/.cargo/bin
-          echo $CARGOPATH
-          echo "##vso[task.setvariable variable=CARGOPATH;]~/.cargo/bin"
-        env:
-          RUSTUP_TOOLCHAIN: ${{parameters.rust}}
-        displayName: "Set Cargo Path (*nix)"
-        condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
       # Necessary for now for the cargo cache:
       # https://github.com/actions/cache/issues/133#issuecomment-599102035
-      - script: sudo chown -R $(whoami):$(id -ng) $(CARGOPATH)
+      - script: sudo chown -R $(whoami):$(id -ng) /usr/share/rust/.cargo/resources
         displayName: Fix .cargo directory permissions
-        condition: not(eq(variables['Agent.OS'], 'Windows_NT'))
-      # Windows.
-      - script: |
-          set CARGOPATH=%USERPROFILE%\.cargo\bin
-          echo "##vso[task.setvariable variable=CARGOPATH;]%USERPROFILE%\.cargo\bin"
-          echo %CARGOPATH%
-        env:
-          RUSTUP_TOOLCHAIN: ${{parameters.rust}}
-        displayName: "Set Cargo Path (windows)"
-        condition: eq(variables['Agent.OS'], 'Windows_NT')
+        condition: eq(variables['Agent.OS'], 'Linux')
       - task: Cache@2
         displayName: Cache cargo registry
+        condition: eq(variables['Agent.OS'], 'Linux')
+        inputs:
+          # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
+          # double quotes.
+          key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
+          path: /usr/share/rust/.cargo/resources
+      - task: Cache@2
+        displayName: Cache cargo registry
+        condition: eq(variables['Agent.OS'], 'Darwin')
+        inputs:
+          # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
+          # double quotes.
+          key: $(Build.SourcesDirectory)/Cargo.toml | $(Build.SourcesDirectory)/Cargo.lock | "$(Agent.OS)" | $(rust)
+          path: /Users/runner/.cargo/bin
+      - task: Cache@2
+        displayName: Cache cargo registry
+        condition: eq(variables['Agent.OS'], 'Windows_NT')
         inputs:
           # The key must be one liner, each segment separated by pipe, non-path segments enclosed by
           # double quotes.
