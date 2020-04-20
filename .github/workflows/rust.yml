@@ -112,7 +112,15 @@ jobs:
     - name: Download Artifact (Linux)
       uses: actions/download-artifact@v1
       with:
-        name: intiface-cli-rs-
+        name: intiface-cli-rs-Linux-debug
+    - name: Download Artifact (Windows)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-Windows-debug
+    - name: Download Artifact (MacOS)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-MacOS-debug
     - name: Create Release
       id: create_release
       uses: actions/create-release@latest
@@ -131,8 +139,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./my-artifact.zip
-        asset_name: my-artifact.zip
+        asset_path: ./intiface-cli-rs-Linux-debug.zip
+        asset_name: intiface-cli-rs-Linux-debug.zip
         asset_content_type: application/zip
     - name: Upload Release Assets (MacOS)
       uses: actions/upload-release-asset@v1
@@ -140,8 +148,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./my-artifact.zip
-        asset_name: my-artifact.zip
+        asset_path: ./intiface-cli-rs-macOS-debug.zip
+        asset_name: intiface-cli-rs-macOS-debug.zip
         asset_content_type: application/zip
     - name: Upload Release Assets (Windows)
       uses: actions/upload-release-asset@v1
@@ -149,6 +157,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./my-artifact.zip
-        asset_name: my-artifact.zip
+        asset_path: ./intiface-cli-rs-Windows-debug.zip
+        asset_name: intiface-cli-rs-Windows-debug.zip
         asset_content_type: application/zip
