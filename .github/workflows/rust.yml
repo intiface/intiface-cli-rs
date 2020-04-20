@@ -71,8 +71,10 @@ jobs:
       with:
         command: fmt
         args: --all -- --check
-    - name: Build
+    - name: Build Debug
       run: cargo build
+    - name: Build Release
+      run: cargo build --release
     - name: Run tests
       run: cargo test
     - name: Run doc gen
@@ -80,15 +82,24 @@ jobs:
     - name: Copy executable (Linux, MacOS)
       if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: |
-        mkdir ci-output
-        cp target/debug/intiface-cli ci-output/IntifaceCLI
+        mkdir ci-output-debug
+        cp target/debug/intiface-cli ci-output-debug/IntifaceCLI
+        mkdir ci-output-release
+        cp target/release/intiface-cli ci-output-release/IntifaceCLI
     - name: Copy executable (Windows)
       if: startsWith(matrix.os, 'windows')
       run: |
-        mkdir ci-output
-        copy target\debug\intiface-cli.exe ci-output\IntifaceCLI.exe
-    - name: Upload artifacts
+        mkdir ci-output-debug
+        copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
+        mkdir ci-output-debug
+        copy target\release\intiface-cli.exe ci-output-release\IntifaceCLI.exe
+    - name: Upload artifacts (debug)
       uses: actions/upload-artifact@v1
       with:
-        name: intiface-cli-rs-${{ matrix.os }}
-        path: ci-output
+        name: intiface-cli-rs-${{ matrix.os }}-debug
+        path: ci-output-debug
+    - name: Upload artifacts (release)
+      uses: actions/upload-artifact@v1
+      with:
+        name: intiface-cli-rs-${{ matrix.os }}-release
+        path: ci-output-release
