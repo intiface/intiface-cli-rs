@@ -86,7 +86,7 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       run: |
         mkdir ci-output
-        zip ci-output\intiface-${{ matrix.os }}-cli-rs.zip target\debug\intiface-cli.exe
+        compress-archive target\debug\intiface-cli.exe -DestinationPath ci-output\intiface-${{ matrix.os }}-cli-rs.zip
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
