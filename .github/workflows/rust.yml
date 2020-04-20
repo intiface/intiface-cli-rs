@@ -73,15 +73,15 @@ jobs:
     - name: Run doc gen
       run: cargo doc --no-deps
     - name: Zip executable (Linux, MacOS)
-      if: startsWith(matrix.os, "Linux") || startsWith(matrix.os, "macOS")
+      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: |
         mkdir ci-output
-        zip ci-output/intiface-${{ runner.os }}-cli-rs.zip target/debug/intiface-cli
+        zip ci-output/intiface-${{ matrix.os }}-cli-rs.zip target/debug/intiface-cli
     - name: Zip executable (Windows)
-      if: startsWith(matrix.os, "Windows")
+      if: startsWith(matrix.os, 'windows')
       run: |
         mkdir ci-output
-        zip ci-output/intiface-${{ runner.os }}-cli-rs.zip target/debug/intiface-cli.exe
+        zip ci-output/intiface-${{ matrix.os }}-cli-rs.zip target/debug/intiface-cli.exe
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
