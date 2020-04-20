@@ -86,4 +86,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: ci-output
-        path: ci-output/*.zip
+        path: ci-output
