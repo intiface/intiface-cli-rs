@@ -135,7 +135,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./intiface-cli-rs-Linux-debug
+        asset_path: ./intiface-cli-rs-Linux-debug/intiface-cli-rs-Linux-debug.zip
         asset_name: intiface-cli-rs-Linux-debug.zip
         asset_content_type: application/zip
     - name: Upload Release Assets (MacOS)
@@ -144,7 +144,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./intiface-cli-rs-macOS-debug
+        asset_path: ./intiface-cli-rs-macOS-debug/intiface-cli-rs-macOS-debug.zip
         asset_name: intiface-cli-rs-macOS-debug.zip
         asset_content_type: application/zip
     - name: Upload Release Assets (Windows)
@@ -153,6 +153,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./intiface-cli-rs-Windows-debug
+        asset_path: ./intiface-cli-rs-Windows-debug/intiface-cli-rs-Windows-debug.zip
         asset_name: intiface-cli-rs-Windows-debug.zip
         asset_content_type: application/zip
