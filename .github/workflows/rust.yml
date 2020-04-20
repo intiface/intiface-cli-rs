@@ -153,10 +153,10 @@ jobs:
     - name: Zip executables
       run: |
         zip intiface-cli-rs-Linux-debug.zip intiface-cli-rs-Linux-debug/IntifaceCLI
-        zip intiface-cli-rs-Windows-debug.zip intiface-cli-rs-Windows-debug/IntifaceCLI
+        zip intiface-cli-rs-Windows-debug.zip intiface-cli-rs-Windows-debug/IntifaceCLI.exe
         zip intiface-cli-rs-macOS-debug.zip intiface-cli-rs-macOS-debug/IntifaceCLI
         zip intiface-cli-rs-Linux-release.zip intiface-cli-rs-Linux-release/IntifaceCLI
-        zip intiface-cli-rs-Windows-release.zip intiface-cli-rs-Windows-release/IntifaceCLI
+        zip intiface-cli-rs-Windows-release.zip intiface-cli-rs-Windows-release/IntifaceCLI.exe
         zip intiface-cli-rs-macOS-release.zip intiface-cli-rs-macOS-release/IntifaceCLI
     - name: Release
       uses: softprops/action-gh-release@v1
