@@ -77,32 +77,28 @@ jobs:
       run: cargo test
     - name: Run doc gen
       run: cargo doc --no-deps
-    - name: Build Release
-      run: cargo build --release
+    # - name: Build Release
+    #   run: cargo build --release
     - name: Copy executable (Linux, MacOS)
       if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: |
         mkdir ci-output-debug
         cp target/debug/intiface-cli ci-output-debug/IntifaceCLI
-        mkdir ci-output-release
-        cp target/release/intiface-cli ci-output-release/IntifaceCLI
     - name: Copy executable (Windows)
       if: startsWith(matrix.os, 'windows')
       run: |
         mkdir ci-output-debug
         copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
-        mkdir ci-output-release
-        copy target\release\intiface-cli.exe ci-output-release\IntifaceCLI.exe
     - name: Upload artifacts (debug)
       uses: actions/upload-artifact@v1
       with:
         name: intiface-cli-rs-${{ runner.os }}-debug
         path: ci-output-debug
-    - name: Upload artifacts (release)
-      uses: actions/upload-artifact@v1
-      with:
-        name: intiface-cli-rs-${{ runner.os }}-release
-        path: ci-output-release
+    # - name: Upload artifacts (release)
+    #   uses: actions/upload-artifact@v1
+    #   with:
+    #     name: intiface-cli-rs-${{ runner.os }}-release
+    #     path: ci-output-release
   release:
     name: Release artifacts
     needs: build-stable
