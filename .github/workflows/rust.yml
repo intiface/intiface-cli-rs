@@ -117,8 +117,7 @@ jobs:
     #   uses: actions/download-artifact@v1
     #   with:
     #     name: intiface-cli-rs-MacOS-debug
-    - name: Zip executable (Linux)
-      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+    - name: Zip executables
       run: |
         zip intiface-cli-rs-Linux-debug.zip intiface-cli-rs-Linux-debug/IntifaceCLI
     # - name: Zip executable (Windows)
