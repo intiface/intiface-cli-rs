@@ -90,5 +90,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: ci-output
+        name: intiface-cli-rs-${{ matrix.os }}
         path: ci-output
