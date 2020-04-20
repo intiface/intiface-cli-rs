@@ -91,7 +91,7 @@ jobs:
       run: |
         mkdir ci-output-debug
         copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
-        mkdir ci-output-debug
+        mkdir ci-output-release
         copy target\release\intiface-cli.exe ci-output-release\IntifaceCLI.exe
     - name: Upload artifacts (debug)
       uses: actions/upload-artifact@v1
