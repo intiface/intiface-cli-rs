@@ -3,44 +3,44 @@ name: Intiface CLI Build
 on: push
 
 jobs:
-  # build-nightly:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Rust toolchain fetch
-  #     uses: actions-rs/toolchain@v1
-  #     with:
-  #       profile: minimal
-  #       toolchain: nightly
-  #       override: true
-  #   - name: Cache cargo registry
-  #     uses: actions/cache@v1
-  #     with:
-  #       path: ~/.cargo/registry
-  #       key: ${{ runner.os }}-nightly-cargo-registry-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('.github/workflows/cache_version') }}
-  #   - name: Build
-  #     run: cargo +nightly build
-  #   - name: Run tests
-  #     run: cargo +nightly test
-  # build-beta:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Rust toolchain fetch
-  #     uses: actions-rs/toolchain@v1
-  #     with:
-  #       profile: minimal
-  #       toolchain: beta
-  #       override: true
-  #   - name: Cache cargo registry
-  #     uses: actions/cache@v1
-  #     with:
-  #       path: ~/.cargo/registry
-  #       key: ${{ runner.os }}-beta-cargo-registry-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('.github/workflows/cache_version') }}
-  #   - name: Build
-  #     run: cargo +beta build
-  #   - name: Run tests
-  #     run: cargo +beta test
+  build-nightly:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Rust toolchain fetch
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        override: true
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-nightly-cargo-registry-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('.github/workflows/cache_version') }}
+    - name: Build
+      run: cargo +nightly build
+    - name: Run tests
+      run: cargo +nightly test
+  build-beta:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Rust toolchain fetch
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: beta
+        override: true
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-beta-cargo-registry-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('.github/workflows/cache_version') }}
+    - name: Build
+      run: cargo +beta build
+    - name: Run tests
+      run: cargo +beta test
   build-stable:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -77,28 +77,28 @@ jobs:
       run: cargo test
     - name: Run doc gen
       run: cargo doc --no-deps
-    # - name: Build Release
-    #   run: cargo build --release
+    - name: Build Release
+      run: cargo build --release
     - name: Copy executable (Linux, MacOS)
       if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       run: |
         mkdir ci-output-debug
         cp target/debug/intiface-cli ci-output-debug/IntifaceCLI
-    # - name: Copy executable (Windows)
-    #   if: startsWith(matrix.os, 'windows')
-    #   run: |
-    #     mkdir ci-output-debug
-    #     copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
+    - name: Copy executable (Windows)
+      if: startsWith(matrix.os, 'windows')
+      run: |
+        mkdir ci-output-debug
+        copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
     - name: Upload artifacts (debug)
       uses: actions/upload-artifact@v1
       with:
         name: intiface-cli-rs-${{ runner.os }}-debug
         path: ci-output-debug
-    # - name: Upload artifacts (release)
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     name: intiface-cli-rs-${{ runner.os }}-release
-    #     path: ci-output-release
+    - name: Upload artifacts (release)
+      uses: actions/upload-artifact@v1
+      with:
+        name: intiface-cli-rs-${{ runner.os }}-release
+        path: ci-output-release
   release:
     name: Release artifacts
     needs: build-stable
@@ -109,60 +109,44 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: intiface-cli-rs-Linux-debug
-    # - name: Download Artifact (Windows)
-    #   uses: actions/download-artifact@v1
-    #   with:
-    #     name: intiface-cli-rs-Windows-debug
-    # - name: Download Artifact (MacOS)
-    #   uses: actions/download-artifact@v1
-    #   with:
-    #     name: intiface-cli-rs-MacOS-debug
+    - name: Download Artifact (Windows)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-Windows-debug
+    - name: Download Artifact (MacOS)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-MacOS-debug
+    - name: Download Artifact (Linux)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-Linux-release
+    - name: Download Artifact (Windows)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-Windows-release
+    - name: Download Artifact (MacOS)
+      uses: actions/download-artifact@v1
+      with:
+        name: intiface-cli-rs-MacOS-release
     - name: Zip executables
       run: |
         zip intiface-cli-rs-Linux-debug.zip intiface-cli-rs-Linux-debug/IntifaceCLI
-    # - name: Zip executable (Windows)
-    #   if: startsWith(matrix.os, 'windows')
-    #   run: |
-    #     mkdir ci-output
-    #     compress-archive target\debug\intiface-cli.exe -DestinationPath ci-output\intiface-${{ matrix.os }}-cli-rs.zip
-    - name: Echo Directory Structure
-      run: find .
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip intiface-cli-rs-Windows-debug.zip intiface-cli-rs-Windows-debug/IntifaceCLI
+        zip intiface-cli-rs-macOS-debug.zip intiface-cli-rs-macOS-debug/IntifaceCLI
+        zip intiface-cli-rs-Linux-release.zip intiface-cli-rs-Linux-release/IntifaceCLI
+        zip intiface-cli-rs-Windows-release.zip intiface-cli-rs-Windows-release/IntifaceCLI
+        zip intiface-cli-rs-macOS-release.zip intiface-cli-rs-macOS-release/IntifaceCLI
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          See changelog for more info.
-        draft: false
-        prerelease: false
-    - name: Upload Release Assets (Linux)
-      uses: actions/upload-release-asset@v1
+        files: |
+          intiface-cli-rs-Linux-debug.zip
+          intiface-cli-rs-Windows-debug.zip
+          intiface-cli-rs-macOS-debug.zip
+          intiface-cli-rs-Linux-release.zip
+          intiface-cli-rs-Windows-release.zip
+          intiface-cli-rs-macOS-release.zip
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./intiface-cli-rs-Linux-debug.zip
-        asset_name: intiface-cli-rs-Linux-debug.zip
-        asset_content_type: application/zip
-    # - name: Upload Release Assets (MacOS)
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./intiface-cli-rs-macOS-debug/intiface-cli-rs-macOS-debug.zip
-    #     asset_name: intiface-cli-rs-macOS-debug.zip
-    #     asset_content_type: application/zip
-    # - name: Upload Release Assets (Windows)
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./intiface-cli-rs-Windows-debug/intiface-cli-rs-Windows-debug.zip
-    #     asset_name: intiface-cli-rs-Windows-debug.zip
-    #     asset_content_type: application/zip
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
