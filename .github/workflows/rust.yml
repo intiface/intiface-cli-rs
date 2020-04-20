@@ -117,6 +117,15 @@ jobs:
     #   uses: actions/download-artifact@v1
     #   with:
     #     name: intiface-cli-rs-MacOS-debug
+    - name: Zip executable (Linux)
+      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+      run: |
+        zip intiface-cli-rs-Linux-debug.zip intiface-cli-rs-Linux-debug/IntifaceCLI
+    # - name: Zip executable (Windows)
+    #   if: startsWith(matrix.os, 'windows')
+    #   run: |
+    #     mkdir ci-output
+    #     compress-archive target\debug\intiface-cli.exe -DestinationPath ci-output\intiface-${{ matrix.os }}-cli-rs.zip
     - name: Echo Directory Structure
       run: find .
     - name: Create Release
@@ -137,7 +146,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./intiface-cli-rs-Linux-debug/intiface-cli-rs-Linux-debug.zip
+        asset_path: ./intiface-cli-rs-Linux-debug.zip
         asset_name: intiface-cli-rs-Linux-debug.zip
         asset_content_type: application/zip
     # - name: Upload Release Assets (MacOS)
