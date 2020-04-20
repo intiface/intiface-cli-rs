@@ -13,6 +13,8 @@ jobs:
         profile: minimal
         toolchain: nightly
         override: true
+    - name: Fix ~/.cargo directory permissions
+      run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
     - name: Cache cargo registry
       uses: actions/cache@v1
       with:
@@ -32,6 +34,8 @@ jobs:
         profile: minimal
         toolchain: beta
         override: true
+    - name: Fix ~/.cargo directory permissions
+      run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
     - name: Cache cargo registry
       uses: actions/cache@v1
       with:
@@ -48,6 +52,9 @@ jobs:
         os: [ubuntu-latest] # [windows-latest, ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v2
+    - name: Fix ~/.cargo directory permissions
+      if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+      run: sudo chown -R $(whoami):$(id -ng) ~/.cargo/
     - name: Cache cargo registry
       uses: actions/cache@v1
       with:
@@ -84,11 +91,15 @@ jobs:
       run: |
         mkdir ci-output-debug
         cp target/debug/intiface-cli ci-output-debug/IntifaceCLI
+        mkdir ci-output-release
+        cp target/release/intiface-cli ci-output-release/IntifaceCLI
     - name: Copy executable (Windows)
       if: startsWith(matrix.os, 'windows')
       run: |
         mkdir ci-output-debug
         copy target\debug\intiface-cli.exe ci-output-debug\IntifaceCLI.exe
+        mkdir ci-output-release
+        copy target\release\intiface-cli.exe ci-output-release\IntifaceCLI.exe
     - name: Upload artifacts (debug)
       uses: actions/upload-artifact@v1
       with:
@@ -149,4 +160,4 @@ jobs:
           intiface-cli-rs-Windows-release.zip
           intiface-cli-rs-macOS-release.zip
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
