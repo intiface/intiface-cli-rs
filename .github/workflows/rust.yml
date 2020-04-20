@@ -3,12 +3,37 @@ name: Intiface CLI Build
 on: push
 
 jobs:
-  build:
+  build-nightly:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-nightly-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+    - name: Build
+      run: cargo +nightly build
+    - name: Run tests
+      run: cargo +nightly test
+  build-beta:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache cargo registry
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-nightly-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+    - name: Build
+      run: cargo +beta build
+    - name: Run tests
+      run: cargo +beta test
+  build-stable:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-
     steps:
     - uses: actions/checkout@v2
     - name: Cache cargo registry
@@ -35,3 +60,12 @@ jobs:
       run: cargo test
     - name: Run doc gen
       run: cargo doc --no-deps
+    - name: Zip executable
+      run: |
+        mkdir ci-output
+        zip ci-output/intiface-${{ runner.os }}-cli-rs.zip target/debug/intiface-cli
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: ci-output
+        path: ci-output
