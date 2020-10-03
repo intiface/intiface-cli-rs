@@ -157,7 +157,7 @@ pub fn parse_options() -> Result<Option<ConnectorOptions>, IntifaceCLIErrorEnum>
 
   if let Some(wssecureport) = &args.wssecureport {
     info!(
-      "Intiface CLI Options: Websocket Insecure Port {}",
+      "Intiface CLI Options: Websocket Secure Port {}",
       wssecureport
     );
     // After this point, we should definitely already know we're connecting
