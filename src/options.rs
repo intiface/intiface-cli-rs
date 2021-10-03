@@ -48,8 +48,8 @@ struct IntifaceCLIArguments {
 
   // Options that set up communications with intiface GUI
   /// if passed, output protobufs for parent process via stdio, instead of strings.
-  #[argh(switch)]
-  frontendpipe: bool,
+  #[argh(option)]
+  frontendpipe: Option<String>,
 
   // Options that set up Buttplug server parameters
   /// name of server to pass to connecting clients.
@@ -68,7 +68,7 @@ struct IntifaceCLIArguments {
   /// ping timeout maximum for server (in milliseconds)
   #[argh(option)]
   #[argh(default = "0")]
-  pingtime: u64,
+  pingtime: u32,
 
   /// if passed, server will stay running after client disconnection
   #[argh(switch)]
@@ -167,7 +167,7 @@ pub fn check_log_level() -> Option<Level> {
 
 pub fn check_frontend_pipe(token: CancellationToken) -> Option<FrontendPBufChannel> {
   let args: IntifaceCLIArguments = argh::from_env();
-  if args.frontendpipe {
+  if args.frontendpipe.is_some() {
     Some(frontend::run_frontend_task(token))
   } else {
     None
@@ -234,7 +234,7 @@ pub fn parse_options() -> Result<Option<ConnectorOptions>, IntifaceCLIErrorEnum>
     .max_ping_time(args.pingtime)
     .allow_raw_messages(args.allowraw);
 
-  if args.frontendpipe {
+  if args.frontendpipe.is_some() {
     info!("Intiface CLI Options: Using frontend pipe");
     connector_info.use_frontend_pipe = true;
   }
