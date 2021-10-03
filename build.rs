@@ -1,11 +1,10 @@
-use vergen::{generate_cargo_keys, ConstantsFlags};
+use anyhow::Result;
+use vergen::{Config, vergen, ShaKind};
 
-fn main() {
-  // Setup the flags, toggling off the 'SEMVER_FROM_CARGO_PKG' flag
-  let mut flags = ConstantsFlags::all();
-  flags.toggle(ConstantsFlags::SEMVER_FROM_CARGO_PKG);
-  flags.toggle(ConstantsFlags::REBUILD_ON_HEAD_CHANGE);
-
-  // Generate the 'cargo:' key output
-  generate_cargo_keys(flags).expect("Unable to generate the cargo keys!");
+fn main() -> Result<()> {
+  let mut config = Config::default();
+  // Change the SHA output to the short variant
+  *config.git_mut().sha_kind_mut() = ShaKind::Short;
+  // Generate the default 'cargo:' instruction output
+  vergen(config)
 }
