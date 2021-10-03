@@ -1,10 +1,5 @@
 use super::{ConnectorOptions, IntifaceCLIErrorEnum, IntifaceError};
-
-use super::frontend::{self, FrontendPBufChannel};
 use argh::FromArgs;
-use buttplug::device::configuration_manager::{
-  DeviceConfigurationManager,
-};
 #[cfg(target_os = "windows")]
 use buttplug::server::comm_managers::xinput::XInputDeviceCommunicationManagerBuilder;
 use buttplug::{
@@ -14,7 +9,6 @@ use buttplug::{
 
 use std::fs;
 use tracing::Level;
-use tokio_util::sync::CancellationToken;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
@@ -22,7 +16,7 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 ///
 /// Note: Commands are one word to keep compat with C#/JS executables currently.
 #[derive(FromArgs)]
-struct IntifaceCLIArguments {
+pub struct IntifaceCLIArguments {
   // Options that do something then exit
   /// print version and exit.
   #[argh(switch)]
@@ -165,13 +159,9 @@ pub fn check_log_level() -> Option<Level> {
   args.log
 }
 
-pub fn check_frontend_pipe(token: CancellationToken) -> Option<FrontendPBufChannel> {
+pub fn frontend_pipe() -> Option<String> {
   let args: IntifaceCLIArguments = argh::from_env();
-  if args.frontendpipe.is_some() {
-    Some(frontend::run_frontend_task(token))
-  } else {
-    None
-  }
+  args.frontendpipe
 }
 
 pub fn parse_options() -> Result<Option<ConnectorOptions>, IntifaceCLIErrorEnum> {
