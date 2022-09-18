@@ -1043,6 +1043,7 @@ dependencies = [
  "getset",
  "log",
  "log-panics",
+ "once_cell",
  "sentry",
  "sentry-tracing",
  "serde",
