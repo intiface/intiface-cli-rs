@@ -1,3 +1,7 @@
+# Deprecated (2023/01/16)
+
+- We've been using Intiface Engine since November 2022 but I forgot to update this until now.
+
 # v50 (2022/04/26)
 
 ## Features

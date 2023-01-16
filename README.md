@@ -1,61 +1,11 @@
-# Buttplug Rust Intiface CLI Utility
+# Buttplug Rust Intiface CLI Utility - DEPRECATED, MOVED TO INTIFACE-ENGINE
 
 [![Patreon donate button](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://www.patreon.com/qdot)
 [![Github donate button](https://img.shields.io/badge/github-donate-ff69b4.svg)](https://www.github.com/sponsors/qdot)
 [![Discord](https://img.shields.io/discord/353303527587708932.svg?logo=discord)](https://discord.buttplug.io)
 [![Twitter](https://img.shields.io/twitter/follow/buttplugio.svg?style=social&logo=twitter)](https://twitter.com/buttplugio)
 
-![Intiface CLI Build](https://github.com/intiface/intiface-cli-rs/workflows/Intiface%20CLI%20Build/badge.svg)  ![crates.io](https://img.shields.io/crates/v/intiface-cli.svg)
-
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/buttplugio/buttplug-rs/dev/buttplug/docs/buttplug_rust_docs.png">
-</p>
-
-CLI for Intiface/Buttplug
-
-Basically just a front-end for
-[buttplug-rs](https://github.com/buttplugio/buttplug-rs), but since we're trying
-to not make people install a program named "Buttplug" on their computers, here
-we are.
-
-While this program can be used standalone, it will mostly be featured
-as a backend/engine for Intiface Desktop.
-
-## Running
-
-Command line options are as follows:
-
-| Option | Description |
-| --------- | --------- |
-| `version` | Print version and exit |
-| `serverversion` | Print version and exit (kept for legacy reasons) |
-| `generatecert` | Generate self signed SSL cert (PEM format) and exit |
-| `wsallinterfaces` | Websocket servers will listen on all interfaces (versus only on localhost, which is default) |
-| `wsinsecureport [port]` | Network port for connecting via non-ssl (ws://) protocols |
-| `ipcpipe [name]` | Name for IPC pipe (not yet implemented) |
-| `frontendpipe` | Relay output via protobuf to stdout (only used by Intiface Desktop GUI) |
-| `servername` | Identifying name server should emit when asked for info |
-| `deviceconfig [file]` | Device configuration file to load (if omitted, uses internal) |
-| `userdeviceconfig [file]` | User device configuration file to load (if omitted, none used) |
-| `pingtime [number]` | Milliseconds for ping time limit of server (if omitted, set to 0) |
-| `stayopen` | Stay open between connections (needed for Windows due to device disconnect issues) |
-| `log` | Level of logs to output by default (if omitted, set to None) |
-
-For example, to run the server on an insecure websocket at port 12345:
-
-`intiface-cli --wsinsecureport 12345`
-
-## Compiling
-
-For compiling on all platforms the protobuf compiler (protoc) is required. On
-Windows and macOS, this can either be retreived via Chocolatey or Homebrew,
-respectively. On Debian linux, the `protobuf-compiler` package can be used.
-Other linux distros most likely have a similar package.
-
-Linux will have extra compilation dependency requirements via
-[buttplug-rs](https://github.com/buttplugio/buttplug-rs). For pacakges required,
-please check there.
+**THIS PROJECT IS NOW DEPRECATED IN FAVOR OF [intiface-engine](https://github.com/intiface/intiface-engine)**. Intiface Engine will now be the official CLI and FFI interface to Buttplug Servers.
 
 ## Contributing
 

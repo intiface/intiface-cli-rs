@@ -1022,7 +1022,7 @@ dependencies = [
 
 [[package]]
 name = "intiface-cli"
-version = "49.0.0"
+version = "50.0.0"
 dependencies = [
  "argh",
  "async-channel",
